@@ -5,6 +5,7 @@ import { ServerToClientEvents, ClientToServerEvents, ServerError, FfmpegConfig }
 
 type BrowserToRtmpClientOptions = {
     host: string;
+    https: boolean;
     port?: number;
     socketio?: Partial<ManagerOptions & SocketOptions>
 } & FfmpegConfig;
@@ -12,8 +13,8 @@ type BrowserToRtmpClientOptions = {
 const DEFAULT_OPTIONS = {
     port: 8086,
     audioBitsPerSecond: 128000,
-    videoBitsPerSecond: 2500000,
-    framerate: 25
+    videoBitsPerSecond: 3000000,
+    framerate: 30
 }
 
 export type BrowserToRtmpClientEvents = {
@@ -47,7 +48,7 @@ export class BrowserToRtmpClient extends (EventEmitter as new () => TypedEmitter
         }
 
         if (options.host.indexOf("http://") === 0) {
-            options.host = "ws://" + options.host.substring("http://".length);
+            options.host = (options.https ? "wss://" : "ws://") + options.host.substring("http://".length);
         }
 
         const socketOptions = {
